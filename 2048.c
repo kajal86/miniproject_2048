@@ -101,11 +101,12 @@ void rotation(unsigned int board[4][4]) {
 		}
 	}
 }
-int moveUp(unsigned int board[4][4]) { 
-	for(int i=0; i<4 ;i++)       
-   		for(int j=0; j<4 ;j++)  {
+int moveUp(unsigned int board[4][4]) {
+	int i, j, k;
+	for(i=0; i<4 ;i++)       
+   		for(j=0; j<4 ;j++)  {
       			if(!board[j][i])    {
-			         for(int k=j+1; k<4 ;k++)  
+			         for(k=j+1; k<4 ;k++)  
 			            if(board[k][i])            {
                			     	board[j][i]=board[k][i]; 
                				board[k][i]=0;          
