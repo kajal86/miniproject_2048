@@ -1,3 +1,30 @@
-Graphics is yet to be used.
-Functions are to be improvised and added.
 
+
+					TITLE OF PROJECT: 2048 GAME
+	
+	NAME: Kajal Alam
+		
+	MIS ID: 111508007
+	
+	DESCRIPTION: 
+	-> You can move the tiles in four directions using arrow keys-> up, down, left,right.
+	-> All numbers on the board will slide in above directions until they hit the wall and if they bump each other then two 
+	numbers with same value will be combined into one.
+	-> Each number will only be combined once per move.
+	-> With every move a new number 2 or 4 appears.
+	-> If you make a 2048 on board, you have won.
+	-> After completing every game , you have to give your name and it will make a txt file and store score in that txt 		file called hiscore.txt
+	
+	Requirenments:
+	-> C Compiler
+	-> GNU/ linux
+	
+	Compilation/Running:
+	-> cc -c 2048.c
+	-> cc -c Highscore.c
+	-> cc 2048.o Highscore.o -o project -lncurses
+  	-> ./project
+  	-> makefile
+  	->run make in commandline
+  	
+  	Screenshots are provided.
