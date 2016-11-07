@@ -33,7 +33,7 @@ struct Highscore {
 	char *time;
 };
 char *usage = 		"Use \"up, down, left, right\" to move tiles, \"q\" to 			  		     				exit.",							\
-     *menuOpt[5] = {"Start game", "High scores", "Credits", "Quit", "Continue"},				\
+     *menuOpt[5] = {"Start game", "High scores", "project by", "Quit", "Continue"},				\
      *member = 		"Name: Kajal Alam\nMIS ID:111508007\nEmail: alamkp15.it@coep.ac.in";
 struct Highscore hs[10]; // High score list.
 int **board,		\
@@ -45,7 +45,7 @@ int **board,		\
 	winGoal = 2048,	\
 	start = 0,		\
 	win = 0,		\
-	usrRetry = 0;
+	Retry = 0;
 //prototypes //
 void cleanUp();
 void initHiScore(struct Highscore hs[]);
@@ -69,8 +69,9 @@ int logOf2(int a) {
 //Checks for winning condition ....
 //returns 1 if there exist a tile that matches the winning goal i.e 2048 and if not it returns 0;
 int winCheck() {
-	for (int a = 0; a < 4; a++) {
-		for (int b = 0; b < 4; b++) {
+	int a,b;
+	for (a = 0; a < 4; a++) {
+		for (b = 0; b < 4; b++) {
 			if (board[a][b] == winGoal)
 				return 1;
 		}
@@ -158,11 +159,7 @@ void slide(dirtype dir) {
 			break;
 	}
 }
-
-/**
- Join tiles in given direction.
- dir The direction to join.
- */
+//join tiles in respective direction, dir-> direction for joining//
 void join(dirtype dir) {
 	int temp1, temp2;
 	switch(dir) {
@@ -217,8 +214,7 @@ void join(dirtype dir) {
 			}
 	}
 }
-//function to replicate a __move__
-//  Returns 1 if there is no available move otherwise returns 0;
+//function for replicating a move ,returns 1 if there is no move otherwise 0. //
 int moveTile(dirtype dir) {
 	int remp[4][4], count = 0, a, b;
 	for (a = 0; a < 4; a++) {
@@ -265,9 +261,7 @@ void generateTile() {
 	z = (rand() & 3) ? 2 : 4;
 	board[x][y] = z;
 }
-/**
- * Draw the gameboard.
-*/
+//Draw gameboard//
 void drawBoard(WINDOW *wn) {
 	int a = 0, b = 0; 
 	int xcord = 0, ycord = 0;
@@ -321,9 +315,7 @@ void drawBoard(WINDOW *wn) {
 	mvwprintw(wn, height - 1, 0, "HIGHSCORE: %d", hiscore);
 
 }
-/*
-  Clear the active window.
-*/
+//clear active window//
 void clearWn(WINDOW* wn) {
 	wgetch(wn);
 	werase(wn);
@@ -332,9 +324,7 @@ void clearWn(WINDOW* wn) {
 	werase(wn);
 }
 
-/**
- * View the highscore.
- */
+//view highscore//
 void viewHiScore() {
 
 	WINDOW* wnHiScore = newwin(24, 80, 4, 30);
@@ -351,15 +341,10 @@ void viewHiScore() {
 		mvwprintw(wnHiScore, i + 1, 14, "%d", hs[i].score);
 		mvwprintw(wnHiScore, i + 1, 25, "%s", hs[i].time);
 	}
-	/*-------------------*/
-
 	clearWn(wnHiScore);
 	endwin();
 }
-
-/**
- * View the credit.
- */
+//view credit//
 void viewCredit() {
 
 	WINDOW* wnCredit = newwin(24, 80, 4, 30);
@@ -367,45 +352,29 @@ void viewCredit() {
 	clearWn(wnCredit);
 	endwin();
 }
-
-/**
- * Store highscore in formatted form.
- *
- * @param score The score to store.
- */
+//store highschore//
 void storeHiScore(int score) {
-
 	char *name = malloc(sizeof(char) * 11), *timeLocal = malloc(sizeof(char) * 17);
-
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
-
 	WINDOW* wnStoreHS = newwin(24, 80, 4, 30);
-
 	ret:;
 	mvwprintw(wnStoreHS, 0, 0, "Please enter your name: ");
 	wscanw(wnStoreHS, "%s", name);
-
 	if (strlen(name) == 0 || strlen(name) > 10)
 		goto ret;
-
 	sprintf(timeLocal, "%d:%d_%d/%d/%d", tm.tm_hour, tm.tm_min, tm.tm_mday, tm.tm_mon, tm.tm_year + 1900);
-
 	if (hs[9].score < score) {
 		hs[9].name = name;
 		hs[9].score = score;
 		hs[9].time = timeLocal;
 	}
-
 	setHiScore(hs);
 	clearWn(wnStoreHS);
 	endwin();
 }
-
-/**
- * Game over window.
- * @return 1 if the player doesn't retry. 0 otherwise.
- */
+//Game over window.//
+//return 1 if player doesn't retry//
 int gameOver(WINDOW* wn) {
 	mvwprintw(wn, 1, 0, "Try again ? Y/N");
 	ret:;
@@ -423,19 +392,15 @@ int gameOver(WINDOW* wn) {
 		goto ret;
 	}
 }
-
-/**
- * Game manager.
- * @return -1 if the player quit the game. 1 if not retry. 0 otherwise.
- */
+//manage game.
+//returns -1 if player quit the game , if doesn't retry returns 1, othewise 0.
 int game(WINDOW* wn) {
 	int move = 0;
 	while (1) {
-
 		if (move == 0) {
 			if (start == 0 || start == 1)
 				generateTile();
-			drawBoard(wn);
+				drawBoard(wn);
 		}
 		input:;
 		int key = wgetch(wn);
@@ -452,17 +417,14 @@ int game(WINDOW* wn) {
 		case KEY_RIGHT:
 			move = moveTile(RIGHT);
 			break;
-
 		case 'q':
 		case 27:
 			return -1;
 			break;
-
 		default:
 			goto input;
 			break;
 		}
-
 		if (win) {
 			wgetch(wn);
 			werase(wn);
@@ -558,11 +520,9 @@ void menu(WINDOW* wn) {
 								goto ret;
 								break;
 						}
-
 				}
 				break;
 		}
-
 		for (int temp1 = 0; temp1 < 4; temp1++) {
 			if (temp1 == index) {
 				wattron(wn, COLOR_PAIR(12));
@@ -584,22 +544,14 @@ void menu(WINDOW* wn) {
 		choice = wgetch(wn);
 	}
 }
-
-/**
- * Cleanup any memory leaks.
- */
+//memory cleans //
 void cleanUp() {
 
 	for (int x = 0; x < 4; x++)
 		free(board[x]);
 	free(board);
 }
-
-/**
- * Initialize color.
- *
- * @return 1 if terminal doesn't support color. 0 otherwise.
- */
+//color initialization, returns 1 if terminal doesn't support color otherwise 0.//
 int initColor() {
 	if (!has_colors()) {
 		return 1;
@@ -621,10 +573,7 @@ int initColor() {
 	}
 	return 0;
 }
-
-/**
- * Main entry point.
-*/
+//main entry point.
 int main(int argc, char **argv) {
 	int args = getopt(argc, argv, "hw:");
 	initHiScore(hs);
@@ -641,22 +590,16 @@ int main(int argc, char **argv) {
 	cbreak();
 	echo();
 	curs_set(false);
-
 	srand((unsigned int)time(NULL));
-
 	hiscore = 0;
-
 	boardSize = 4;
 	initBoard();
-
 	WINDOW *wn = newwin(height, width, 4, 30);
 	keypad(wn, TRUE);
-
 	if (initColor()) {
 		wprintw(wn, "Terminal does not support color.\n");
 		wgetch(wn);
 	}
-
 	menu(wn);
 	return 0;
 }
